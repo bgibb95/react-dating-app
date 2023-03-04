@@ -1,37 +1,44 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 import { LockOutlined } from '@mui/icons-material';
-import { Avatar, Box, Button, Container, CssBaseline, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Container, CssBaseline, Typography } from '@mui/material';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
+interface LoginComponentState {
+  username: string;
+  password: string;
+  loading: boolean;
+  errorMessage: string;
+}
+
 export default function Login() {
-  const [state, setState] = useState<any>({
+  const [state, setState] = useState<LoginComponentState>({
     username: '',
     password: '',
     loading: false,
-    message: '',
+    errorMessage: '',
   });
-  const onChangeUsername = (e: any) => {
+  const onChangeUsername = (event: React.FormEvent<HTMLInputElement>) => {
     setState({
       ...state,
-      username: e.target.value,
+      username: event.currentTarget.value,
     });
   };
-  const onChangePassword = (e: any) => {
+  const onChangePassword = (event: React.FormEvent<HTMLInputElement>) => {
     setState({
       ...state,
-      password: e.target.value,
+      password: event.currentTarget.value,
     });
   };
   const navigate = useNavigate();
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: FormEvent<Element>) => {
     event.preventDefault();
 
     setState({
       ...state,
-      message: '',
+      errorMessage: '',
       loading: true,
     });
 
@@ -49,7 +56,7 @@ export default function Login() {
         setState({
           ...state,
           loading: false,
-          message: resMessage,
+          errorMessage: resMessage,
         });
       }
     );
@@ -73,7 +80,7 @@ export default function Login() {
           Login
         </Typography>
 
-        <ValidatorForm onSubmit={handleSubmit} onError={(errors: any) => console.log(errors)}>
+        <ValidatorForm onSubmit={handleSubmit}>
           <TextValidator
             margin='normal'
             fullWidth
@@ -104,7 +111,16 @@ export default function Login() {
           </Button>
         </ValidatorForm>
 
-        {state.message && <h5>{state.message}</h5>}
+        {state.errorMessage && (
+          <Alert
+            sx={{ m: 2 }}
+            variant='outlined'
+            severity='warning'
+            onClose={() => setState({ ...state, errorMessage: '' })}
+          >
+            {state.errorMessage}
+          </Alert>
+        )}
       </Box>
     </Container>
   );

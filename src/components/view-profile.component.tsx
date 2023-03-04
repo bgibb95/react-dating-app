@@ -13,19 +13,22 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
+import { User } from '../common/interfaces';
+
+interface ViewProfileComponentState {
+  user: User | null;
+}
 
 export default function ViewProfile() {
-  const [state, setState] = useState<any>({});
+  const [state, setState] = useState<ViewProfileComponentState>({ user: null });
   const [queryParameters] = useSearchParams();
-  const username = queryParameters.get('user');
+  const usernameUrlParam = queryParameters.get('user');
 
   useEffect(() => {
-    if (!username) return;
+    if (!usernameUrlParam) return;
 
-    UserService.getUserProfile(username).then(
+    UserService.getUserProfile(usernameUrlParam).then(
       (response) => {
-        console.log(response.data);
-
         setState({
           user: response.data.user,
         });
@@ -81,7 +84,9 @@ export default function ViewProfile() {
               <Typography sx={{ mb: 1 }} color='text.secondary'>
                 Member since
               </Typography>
-              <Typography>{new Date(state.user.createdAt).toLocaleString()}</Typography>
+              {state.user.createdAt && (
+                <Typography>{new Date(state.user.createdAt).toLocaleString()}</Typography>
+              )}
             </CardContent>
             <CardActions>
               <Button href={'mailto:' + state.user.email} sx={{ mb: 1 }} size='small'>

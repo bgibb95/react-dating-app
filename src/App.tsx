@@ -21,11 +21,16 @@ import Register from './components/register.component';
 import AuthService from './services/auth.service';
 
 import { AppRegistrationRounded, LoginOutlined, Logout, Person, Search } from '@mui/icons-material';
+import { User } from './common/interfaces';
 import ViewProfile from './components/view-profile.component';
 
+interface AppComponentState {
+  currentUser: User | null;
+}
+
 function App() {
-  const [state, setState] = useState<any>({
-    currentUser: undefined,
+  const [state, setState] = useState<AppComponentState>({
+    currentUser: null,
   });
   const darkTheme = createTheme({
     palette: {
@@ -60,7 +65,7 @@ function App() {
   const logOut = () => {
     AuthService.logout();
     setState({
-      currentUser: undefined,
+      currentUser: null,
     });
     navigate('/login');
   };

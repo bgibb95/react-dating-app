@@ -1,19 +1,15 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { apiUrl } from '../common/constants';
+import { User } from '../common/interfaces';
 import authHeader from './auth-header';
 
-const API_URL = 'http://localhost:8000/api/test/';
-
 class UserService {
-  getPublicContent() {
-    return axios.get(API_URL + 'all');
+  getAllUsers(): Promise<AxiosResponse<{ users: User[] | undefined }>> {
+    return axios.get(`${apiUrl}all-users`, { headers: authHeader() });
   }
 
   getUserProfile(username: string) {
-    return axios.post(API_URL + 'user-profile', { username }, { headers: authHeader() });
-  }
-
-  getUserBoard() {
-    return axios.get(API_URL + 'user', { headers: authHeader() });
+    return axios.post(`${apiUrl}user-profile`, { username }, { headers: authHeader() });
   }
 }
 

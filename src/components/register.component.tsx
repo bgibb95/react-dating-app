@@ -1,14 +1,30 @@
 import { Person } from '@mui/icons-material';
-import { Avatar, Box, Button, Container, CssBaseline, MenuItem, Typography } from '@mui/material';
-import { useState } from 'react';
+import {
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  MenuItem,
+  Typography,
+} from '@mui/material';
+import { FormEvent, useState } from 'react';
 import { SelectValidator, TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { useNavigate } from 'react-router-dom';
+import { User } from '../common/interfaces';
 import AuthService from '../services/auth.service';
 
+interface RegisterComponentState {
+  loading: boolean;
+  errorMessage: string;
+  user: User;
+}
+
 export default function Register() {
-  const [state, setState] = useState<any>({
+  const [state, setState] = useState<RegisterComponentState>({
     loading: false,
-    message: '',
+    errorMessage: '',
     user: {
       firstName: '',
       lastName: '',
@@ -24,106 +40,95 @@ export default function Register() {
   ValidatorForm.addValidationRule('isValidUsername', (value: string) => {
     return value.length <= 30 && value.length >= 3;
   });
-
   ValidatorForm.addValidationRule('isValidPassword', (value: string) => {
     return value.length <= 40 && value.length >= 6;
   });
-
   ValidatorForm.addValidationRule('isValidText', (value: string) => {
     return value.length <= 255 && value.length >= 5;
   });
-
   ValidatorForm.addValidationRule('isValidOccupation', (value: string) => {
     return value.length <= 50 && value.length >= 3;
   });
 
-  const onChangeUsername = (e: any) => {
+  const onChangeUsername = (event: React.FormEvent<HTMLInputElement>) => {
     setState({
       ...state,
       user: {
         ...state.user,
-        username: e.target.value,
+        username: event.currentTarget.value,
       },
     });
   };
-
-  const onChangeFirstName = (e: any) => {
+  const onChangeFirstName = (event: React.FormEvent<HTMLInputElement>) => {
     setState({
       ...state,
       user: {
         ...state.user,
-        firstName: e.target.value,
+        firstName: event.currentTarget.value,
       },
     });
   };
-
-  const onChangeLastName = (e: any) => {
+  const onChangeLastName = (event: React.FormEvent<HTMLInputElement>) => {
     setState({
       ...state,
       user: {
         ...state.user,
-        lastName: e.target.value,
+        lastName: event.currentTarget.value,
       },
     });
   };
-
-  const onChangePassword = (e: any) => {
+  const onChangePassword = (event: React.FormEvent<HTMLInputElement>) => {
     setState({
       ...state,
       user: {
         ...state.user,
-        password: e.target.value,
+        password: event.currentTarget.value,
       },
     });
   };
-
-  const onChangeGender = (e: any) => {
+  const onChangeGender = (event: React.FormEvent<HTMLInputElement>) => {
     setState({
       ...state,
       user: {
         ...state.user,
-        gender: e.target.value,
+        gender: event.currentTarget.value,
       },
     });
   };
-
-  const onChangeHobbies = (e: any) => {
+  const onChangeHobbies = (event: React.FormEvent<HTMLInputElement>) => {
     setState({
       ...state,
       user: {
         ...state.user,
-        hobbies: e.target.value,
+        hobbies: event.currentTarget.value,
       },
     });
   };
-
-  const onChangeEmail = (e: any) => {
+  const onChangeEmail = (event: React.FormEvent<HTMLInputElement>) => {
     setState({
       ...state,
       user: {
         ...state.user,
-        email: e.target.value,
+        email: event.currentTarget.value,
       },
     });
   };
-
-  const onChangeOccupation = (e: any) => {
+  const onChangeOccupation = (event: React.FormEvent<HTMLInputElement>) => {
     setState({
       ...state,
       user: {
         ...state.user,
-        occupation: e.target.value,
+        occupation: event.currentTarget.value,
       },
     });
   };
-
   const navigate = useNavigate();
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: FormEvent<Element>) => {
     event.preventDefault();
 
     setState({
       ...state,
-      message: '',
+      errorMessage: '',
       loading: true,
     });
 
@@ -133,8 +138,6 @@ export default function Register() {
         window.location.reload();
       },
       (error) => {
-        console.log(error);
-
         const resMessage =
           (error.response && error.response.data && error.response.data.message) ||
           error.message ||
@@ -143,7 +146,7 @@ export default function Register() {
         setState({
           ...state,
           loading: false,
-          message: resMessage,
+          errorMessage: resMessage,
         });
       }
     );
@@ -168,13 +171,13 @@ export default function Register() {
           Create your dating profile
         </Typography>
 
-        <ValidatorForm onSubmit={handleSubmit} onError={(errors: any) => console.log(errors)}>
+        <ValidatorForm onSubmit={handleSubmit}>
           <TextValidator
             margin='normal'
             fullWidth
             label='Username'
             name='username'
-            value={state.user?.username || ''}
+            value={state.user.username || ''}
             onChange={onChangeUsername}
             validators={['required', 'isValidUsername']}
             errorMessages={[
@@ -189,7 +192,7 @@ export default function Register() {
             name='new-password'
             label='Password'
             type='password'
-            value={state.user?.password || ''}
+            value={state.user.password || ''}
             onChange={onChangePassword}
             validators={['required', 'isValidPassword']}
             errorMessages={[
@@ -203,7 +206,7 @@ export default function Register() {
             fullWidth
             label='First name'
             name='firstName'
-            value={state.user?.firstName || ''}
+            value={state.user.firstName || ''}
             onChange={onChangeFirstName}
             validators={['required']}
             errorMessages={['Enter your first name']}
@@ -214,7 +217,7 @@ export default function Register() {
             fullWidth
             label='Last name'
             name='lastName'
-            value={state.user?.lastName || ''}
+            value={state.user.lastName || ''}
             onChange={onChangeLastName}
             validators={['required']}
             errorMessages={['Enter your last name']}
@@ -226,7 +229,7 @@ export default function Register() {
             type='text'
             name='email'
             label='Email'
-            value={state.user?.email || ''}
+            value={state.user.email || ''}
             onChange={onChangeEmail}
             validators={['required', 'isEmail']}
             errorMessages={['Enter your email address', 'Enter a valid email address']}
@@ -238,7 +241,7 @@ export default function Register() {
             type='select'
             name='gender'
             label='Gender'
-            value={state.user?.gender || ''}
+            value={state.user.gender || ''}
             onChange={onChangeGender}
             validators={['required']}
             errorMessages={['Select your sex']}
@@ -254,7 +257,7 @@ export default function Register() {
             type='text'
             name='hobbies'
             label='Hobbies'
-            value={state.user?.hobbies || ''}
+            value={state.user.hobbies || ''}
             onChange={onChangeHobbies}
             validators={['required', 'isValidText']}
             errorMessages={[
@@ -269,7 +272,7 @@ export default function Register() {
             type='text'
             name='occupation'
             label='Occupation'
-            value={state.user?.occupation || ''}
+            value={state.user.occupation || ''}
             onChange={onChangeOccupation}
             validators={['required', 'isValidOccupation']}
             errorMessages={[
@@ -283,7 +286,16 @@ export default function Register() {
           </Button>
         </ValidatorForm>
 
-        {state.message && <h5>{state.message}</h5>}
+        {state.errorMessage && (
+          <Alert
+            sx={{ m: 2 }}
+            variant='outlined'
+            severity='warning'
+            onClose={() => setState({ ...state, errorMessage: '' })}
+          >
+            {state.errorMessage}
+          </Alert>
+        )}
       </Box>
     </Container>
   );
