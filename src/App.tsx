@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
-import EventBus from './common/EventBus';
+import { eventBus } from './common/utilities';
 import Home from './components/home.component';
 import Login from './components/login.component';
 import Profile from './components/profile.component';
@@ -77,9 +77,7 @@ function App() {
         currentUser: user,
       });
     }
-    EventBus.on('logout', () => {
-      logOut();
-    });
+    eventBus.on('logout', () => logOut());
   }, []);
 
   return (
@@ -102,7 +100,6 @@ function App() {
         <div className='container mt-3'>
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/home' element={<Home />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
             <Route path='/profile' element={<Profile />} />
@@ -115,7 +112,7 @@ function App() {
         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
           <BottomNavigation value={value} onChange={handleChange} showLabels>
             {state.currentUser && (
-              <BottomNavigationAction label='Find love' value='home' icon={<Search />} />
+              <BottomNavigationAction label='Find love' value='' icon={<Search />} />
             )}
             {state.currentUser && (
               <BottomNavigationAction label='Profile' value='profile' icon={<Person />} />

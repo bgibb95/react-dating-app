@@ -5,7 +5,7 @@ import { User } from '../common/interfaces';
 class AuthService {
   login(username: string, password: string) {
     return axios
-      .post(`${apiUrl}signin`, {
+      .post(`${apiUrl}login`, {
         username,
         password,
       })

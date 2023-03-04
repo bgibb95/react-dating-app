@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import EventBus from '../common/EventBus';
+import { eventBus } from '../common/utilities';
 import UserService from '../services/user.service';
 
 import { Person } from '@mui/icons-material';
@@ -14,6 +14,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { User } from '../common/interfaces';
+import AuthService from '../services/auth.service';
 
 interface ViewProfileComponentState {
   user: User | null;
@@ -23,9 +24,11 @@ export default function ViewProfile() {
   const [state, setState] = useState<ViewProfileComponentState>({ user: null });
   const [queryParameters] = useSearchParams();
   const usernameUrlParam = queryParameters.get('user');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!usernameUrlParam) return;
+    const currentUser = AuthService.getCurrentUser();
+    if (!currentUser || !usernameUrlParam) return navigate('/login');
 
     UserService.getUserProfile(usernameUrlParam).then(
       (response) => {
@@ -42,7 +45,7 @@ export default function ViewProfile() {
         });
 
         if (error.response && error.response.status === 401) {
-          EventBus.dispatch('logout');
+          eventBus.dispatch('logout');
         }
       }
     );

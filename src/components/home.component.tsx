@@ -1,8 +1,9 @@
-import { Alert, Box, Button, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Alert, Box, Typography } from '@mui/material';
+import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../common/interfaces';
+import { eventBus } from '../common/utilities';
 import AuthService from '../services/auth.service';
 import UserService from '../services/user.service';
 
@@ -35,19 +36,6 @@ export default function Home() {
       headerName: 'Registration date',
       flex: 0.1,
     },
-    {
-      field: 'username',
-      headerName: 'Profile',
-      flex: 0.1,
-      renderCell: (params) => {
-        const onClick = (e: React.MouseEvent<HTMLElement>) => {
-          e.stopPropagation(); // don't select this row after clicking
-          navigate(`/view-profile?user=${params.row.username}`);
-        };
-
-        return <Button onClick={onClick}>View</Button>;
-      },
-    },
   ];
   let count = 1;
   const rows = state.users?.map((user) => {
@@ -62,6 +50,9 @@ export default function Home() {
   });
 
   useEffect(() => {
+    const currentUser = AuthService.getCurrentUser();
+    if (!currentUser) return navigate(`/login`);
+
     UserService.getAllUsers().then(
       (response) => {
         setState({
@@ -69,10 +60,6 @@ export default function Home() {
           users: response.data.users,
           errorMessage: '',
         });
-
-        const currentUser = AuthService.getCurrentUser();
-
-        if (!currentUser) navigate(`/login`);
       },
       (error) => {
         setState({
@@ -81,9 +68,18 @@ export default function Home() {
             error?.response?.data?.message ||
             'Sorry, something went wrong fetching the users. Please try again later.',
         });
+
+        if (error.response && error.response.status === 401) {
+          eventBus.dispatch('logout');
+        }
       }
     );
   }, []);
+
+  const handleRowClick: GridEventListener<'rowClick'> | undefined = (params, event) => {
+    event.stopPropagation(); // Prevents selecting this row after clicking
+    navigate(`/view-profile?user=${params.row.username}`);
+  };
 
   return (
     <Box
@@ -111,11 +107,13 @@ export default function Home() {
             <DataGrid
               sx={{
                 width: '100%',
+                '.MuiDataGrid-row': { cursor: 'pointer' },
               }}
               rows={rows}
               columns={columns}
               pageSize={10}
               rowsPerPageOptions={[10]}
+              onRowClick={handleRowClick}
             />
           )}
         </React.Fragment>
