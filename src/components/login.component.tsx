@@ -62,6 +62,13 @@ export default function Login() {
     );
   };
 
+  ValidatorForm.addValidationRule('isValidUsername', (value: string) => {
+    return value.length <= 30 && value.length >= 3;
+  });
+  ValidatorForm.addValidationRule('isValidPassword', (value: string) => {
+    return value.length <= 40 && value.length >= 6;
+  });
+
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
@@ -89,8 +96,11 @@ export default function Login() {
             autoFocus
             value={state.username || ''}
             onChange={onChangeUsername}
-            validators={['required']}
-            errorMessages={['Enter the username for your profile']}
+            validators={['required', 'isValidUsername']}
+            errorMessages={[
+              'Enter the username for your profile',
+              'Your username should be between 3 and 30 characters',
+            ]}
           ></TextValidator>
 
           <TextValidator
@@ -101,9 +111,12 @@ export default function Login() {
             type='password'
             value={state.password || ''}
             onChange={onChangePassword}
-            validators={['required']}
+            validators={['required', 'isValidPassword']}
             autoComplete='current-password'
-            errorMessages={['Enter the password for your profile']}
+            errorMessages={[
+              'Enter the password for your profile',
+              'Your password should be between 6 and 40 characters',
+            ]}
           ></TextValidator>
 
           <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>

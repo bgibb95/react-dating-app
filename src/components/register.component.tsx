@@ -279,7 +279,7 @@ export default function Register() {
             validators={['required', 'isValidOccupation']}
             errorMessages={[
               'Enter your job title',
-              'Your hobbies should be between 3 and 50 characters',
+              'Your occupation should be between 3 and 50 characters',
             ]}
           />
 

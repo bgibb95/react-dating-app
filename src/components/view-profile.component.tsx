@@ -32,6 +32,8 @@ export default function ViewProfile() {
 
     UserService.getUserProfile(usernameUrlParam).then(
       (response) => {
+        if (!response.data.user) return navigate('/');
+
         setState({
           user: response.data.user,
         });

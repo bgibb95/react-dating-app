@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
+  // StrictMode will result in duplicate API calls during dev
+  // https://reactjs.org/docs/strict-mode.html
   <React.StrictMode>
     <BrowserRouter>
       <App />

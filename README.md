@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# react-dating-app
+
+A React web app with TypeScript and JWT for creating dating profiles.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
