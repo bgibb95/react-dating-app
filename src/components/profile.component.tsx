@@ -1,5 +1,5 @@
 import { Person } from '@mui/icons-material';
-import { Avatar, Box, Button, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../common/interfaces';
@@ -44,6 +44,10 @@ export default function Profile() {
             </Typography>
             <Typography sx={{ mb: 4 }}>{state.user.email}</Typography>
             <Typography sx={{ mb: 1 }} color='text.secondary'>
+              Username
+            </Typography>
+            <Typography sx={{ mb: 4 }}>{state.user.username}</Typography>
+            <Typography sx={{ mb: 1 }} color='text.secondary'>
               Occupation
             </Typography>
             <Typography sx={{ mb: 4 }}>{state.user.occupation}</Typography>
@@ -64,11 +68,6 @@ export default function Profile() {
               <Typography>{new Date(state.user.createdAt).toLocaleString()}</Typography>
             )}
           </CardContent>
-          <CardActions>
-            <Button href={'mailto:' + state.user.email} sx={{ mb: 1 }} size='small'>
-              Get in touch with email
-            </Button>
-          </CardActions>
         </React.Fragment>
       </Card>
     </Box>
