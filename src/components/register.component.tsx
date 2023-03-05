@@ -179,6 +179,7 @@ export default function Register() {
             fullWidth
             label='Username'
             name='username'
+            autoFocus
             value={state.user.username || ''}
             onChange={onChangeUsername}
             validators={['required', 'isValidUsername']}
