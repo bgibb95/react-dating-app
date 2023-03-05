@@ -84,7 +84,7 @@ export default function Home() {
   return (
     <Box
       sx={{
-        height: '500px',
+        height: '75vh',
         width: '80vw',
         margin: '40px auto 0',
         display: 'flex',

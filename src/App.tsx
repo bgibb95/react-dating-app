@@ -21,6 +21,7 @@ import Register from './components/register.component';
 import AuthService from './services/auth.service';
 
 import { AppRegistrationRounded, LoginOutlined, Logout, Person, Search } from '@mui/icons-material';
+import AuthVerify from './common/auth-verify';
 import { User } from './common/interfaces';
 import ViewProfile from './components/view-profile.component';
 
@@ -96,42 +97,38 @@ function App() {
         </AppBar>
       </Box>
 
-      <div>
-        <div className='container mt-3'>
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<Register />} />
-            <Route path='/profile' element={<Profile />} />
-            <Route path='/view-profile' element={<ViewProfile />} />
-          </Routes>
-        </div>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/view-profile' element={<ViewProfile />} />
+      </Routes>
 
-        {/* <AuthVerify logOut={logOut} /> */}
+      <AuthVerify logOut={logOut} />
 
-        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-          <BottomNavigation value={value} onChange={handleChange} showLabels>
-            {state.currentUser && (
-              <BottomNavigationAction label='Find love' value='' icon={<Search />} />
-            )}
-            {state.currentUser && (
-              <BottomNavigationAction label='Profile' value='profile' icon={<Person />} />
-            )}
-            {!state.currentUser ? (
-              <BottomNavigationAction label='Login' value='login' icon={<LoginOutlined />} />
-            ) : (
-              <BottomNavigationAction label='Logout' value='logout' icon={<Logout />} />
-            )}
-            {!state.currentUser && (
-              <BottomNavigationAction
-                label='Register'
-                value='register'
-                icon={<AppRegistrationRounded />}
-              />
-            )}
-          </BottomNavigation>
-        </Paper>
-      </div>
+      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+        <BottomNavigation value={value} onChange={handleChange} showLabels>
+          {state.currentUser && (
+            <BottomNavigationAction label='Find love' value='' icon={<Search />} />
+          )}
+          {state.currentUser && (
+            <BottomNavigationAction label='Profile' value='profile' icon={<Person />} />
+          )}
+          {!state.currentUser ? (
+            <BottomNavigationAction label='Login' value='login' icon={<LoginOutlined />} />
+          ) : (
+            <BottomNavigationAction label='Logout' value='logout' icon={<Logout />} />
+          )}
+          {!state.currentUser && (
+            <BottomNavigationAction
+              label='Register'
+              value='register'
+              icon={<AppRegistrationRounded />}
+            />
+          )}
+        </BottomNavigation>
+      </Paper>
     </ThemeProvider>
   );
 }

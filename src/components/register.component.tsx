@@ -9,7 +9,7 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
-import { FormEvent, useState } from 'react';
+import { FormEvent, PointerEvent, useState } from 'react';
 import { SelectValidator, TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../common/interfaces';
@@ -86,12 +86,14 @@ export default function Register() {
       },
     });
   };
-  const onChangeGender = (event: React.FormEvent<HTMLInputElement>) => {
+  const onChangeGender = (event: PointerEvent<HTMLSelectElement>) => {
+    const target = event.target as HTMLSelectElement;
+
     setState({
       ...state,
       user: {
         ...state.user,
-        gender: event.currentTarget.value,
+        gender: target.value,
       },
     });
   };

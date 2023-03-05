@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { Location, NavigateFunction, Params } from 'react-router-dom';
+import { withRouter } from './with-router';
 
 const parseJwt = (token: string) => {
   try {
@@ -8,8 +10,15 @@ const parseJwt = (token: string) => {
   }
 };
 
-export default function AuthVerify(props: any) {
-  let location = props.router.location;
+export const AuthVerify = (props: {
+  router: {
+    location: Location;
+    navigate: NavigateFunction;
+    params: Readonly<Params<string>>;
+  };
+  logOut: () => void;
+}) => {
+  const { router, logOut } = props;
 
   useEffect(() => {
     const userString = localStorage.getItem('user');
@@ -19,12 +28,12 @@ export default function AuthVerify(props: any) {
       const decodedJwt = parseJwt(user.accessToken);
 
       if (decodedJwt.exp * 1000 < Date.now()) {
-        props.logOut();
+        logOut();
       }
     }
-  }, [location]);
+  }, [router.location, logOut]);
 
-  return <div></div>;
-}
+  return <React.Fragment />;
+};
 
-//export default withRouter(AuthVerify);
+export default withRouter(AuthVerify);

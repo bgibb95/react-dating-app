@@ -22,7 +22,7 @@ class AuthService {
     localStorage.removeItem('user');
   }
 
-  register(user: unknown) {
+  register(user: User) {
     return axios.post(`${apiUrl}signup`, user).then((response) => {
       if (response.data.accessToken) {
         localStorage.setItem('user', JSON.stringify(response.data));
